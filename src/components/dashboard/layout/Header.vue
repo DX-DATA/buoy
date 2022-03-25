@@ -1,9 +1,12 @@
 <template>
-  <div class="header"></div>
+  <div class="header">헤더임</div>
 </template>
 
 <script>
 export default {};
 </script>
 
-<style scoped></style>
+<style scoped>
+.header {
+}
+</style>

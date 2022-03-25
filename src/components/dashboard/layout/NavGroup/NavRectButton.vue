@@ -43,13 +43,15 @@ export default {
 .nav-button {
   width: 80%;
   text-align: center;
-  margin: 20px;
+  margin: 20px auto 20px auto;
   border-radius: 10px 10px 10px 10px;
   background: none;
   font-family: 'NanumBarunGothicYetHangul';
 }
 
 .nav-button > a {
+  display: flex;
+  justify-content: center;
   font-size: 22px;
   color: rgba(225, 225, 225, 0.8);
 }
@@ -63,8 +65,6 @@ export default {
 }
 
 .nav_link {
-  display: block;
-  display: flex;
   align-items: center;
   height: 20px;
   padding: 1rem 1rem;

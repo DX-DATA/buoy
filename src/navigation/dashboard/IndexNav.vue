@@ -29,14 +29,13 @@ export default {
   padding: 0px;
   display: grid;
   grid-template-columns: 0.2fr 1fr;
-  grid-template-rows: 0.05fr 1fr;
+  grid-template-rows: 0.1fr 1fr;
   grid-template-areas:
     'nav header'
     'nav content';
 }
 
 .padding {
-  padding: 0px 3% 0px 3%;
 }
 
 .nav {
@@ -49,10 +48,12 @@ export default {
 
 .header-nav {
   grid-area: header;
+  margin: 0px 48px 0px 48px;
   border-bottom: 1px solid #b3b3b3;
 }
 
 .content {
+  margin: 0px 48px 0px 48px;
   grid-area: content;
 }
 

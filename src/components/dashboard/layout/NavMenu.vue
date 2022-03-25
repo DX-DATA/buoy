@@ -1,5 +1,6 @@
 <template>
   <div class="nav">
+    <div class="logo">로고영역임니다</div>
     <hr class="line" />
 
     <div class="button-group">
@@ -40,6 +41,10 @@ export default {
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #4f678c 0%, #222b37 100%);
+}
+
+.logo {
+  margin: 50px auto 0px auto;
 }
 
 .button-group {
