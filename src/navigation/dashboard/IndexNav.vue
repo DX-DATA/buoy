@@ -4,11 +4,11 @@
       <Nav />
     </div>
 
-    <div class="header-nav padding">
+    <div class="header-nav">
       <Header />
     </div>
 
-    <div class="content padding">
+    <div class="content">
       <router-view></router-view>
     </div>
   </div>
@@ -28,11 +28,15 @@ export default {
   margin: 0px;
   padding: 0px;
   display: grid;
+  background: #e6e7eb;
   grid-template-columns: 0.2fr 1fr;
   grid-template-rows: 0.1fr 1fr;
   grid-template-areas:
     'nav header'
     'nav content';
+}
+
+.header_line {
 }
 
 .padding {
@@ -48,13 +52,14 @@ export default {
 
 .header-nav {
   grid-area: header;
-  margin: 0px 48px 0px 48px;
-  border-bottom: 1px solid #b3b3b3;
+  background: white;
+
+  padding: 0px 48px 0px 48px;
 }
 
 .content {
-  margin: 0px 48px 0px 48px;
   grid-area: content;
+  background: white;
 }
 
 @media screen and (max-width: 767px) {

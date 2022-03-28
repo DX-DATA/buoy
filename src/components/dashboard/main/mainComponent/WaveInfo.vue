@@ -7,7 +7,7 @@
       <span v-if="state.msg.temp_msg.positive < 0" style="color: #7ebaf1"> {{ state.msg.temp_msg.temp }}</span
       >{{ state.msg.temp_msg.last }}
     </div>
-    <div class="salinity item">염도 {{ state.info.salinity }} psu</div>
+    <div class="salinity item">염도 {{ state.info.salinity }}%</div>
     <div class="avg-salinity item">
       {{ state.msg.salinity_msg.first }}
       <span v-if="state.msg.salinity_msg.positive > 0" style="color: #f59057"> {{ state.msg.salinity_msg.sali_gap }}</span>
@@ -69,15 +69,15 @@ export default {
       if (salinity_gap < 0) {
         state.msg.salinity_msg.first = `평균보다`;
         state.msg.salinity_msg.last = ` 낮습니다.`;
-        state.msg.salinity_msg.sali_gap = -salinity_gap.toFixed(1) + 'psu';
+        state.msg.salinity_msg.sali_gap = -salinity_gap.toFixed(1) + '%';
         state.msg.salinity_msg.positive = -1;
       } else if (salinity_gap == 0) {
         state.msg.salinity_msg.first = `평균염도와 같습니다.`;
         state.msg.salinity_msg.last = '';
       } else if (salinity_gap > 0) {
         state.msg.salinity_msg.first = `평균보다`;
-        state.msg.salinity_msg.last = ` 높습니다.`;
-        state.msg.salinity_msg.sali_gap = salinity_gap.toFixed(1) + 'psu';
+        state.msg.salinity_msg.last = `% 높습니다.`;
+        state.msg.salinity_msg.sali_gap = salinity_gap.toFixed(1) + '%';
         state.msg.salinity_msg.positive = 1;
       }
     }
