@@ -6,6 +6,7 @@
 
 <script>
 import { onMounted, reactive } from '@vue/runtime-core';
+
 export default {
   props: {
     url: String,
@@ -76,7 +77,8 @@ export default {
   border-radius: 20px 0px 0px 20px;
   text-decoration: none;
   color: #4f678c;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
 }
 
 .nav a.router-link-active {
@@ -86,6 +88,7 @@ export default {
   font-weight: bold;
 
   border-radius: 20px 0px 0px 20px;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
 }
 </style>

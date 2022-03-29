@@ -18,17 +18,25 @@
       </div>
     </div>
     <div class="wind item">
-      <img style="height: 64px; margin: 0 auto" :src="require('../../../../assets/wind.svg')" />
+      <img
+        style="height: 64px; margin: 0 auto"
+        :src="require('../../../../assets/wind.svg')"
+      />
       <div class="text">
         <div class="text-top">풍속</div>
-        <div class="text-bottom">{{ props.data.wind }} <span style="font-size: 24px">cm/s</span></div>
+        <div class="text-bottom">
+          {{ props.data.wind }} <span style="font-size: 24px">cm/s</span>
+        </div>
       </div>
     </div>
     <div class="wave item">
       <img class="icon" :src="require('../../../../assets/wave.svg')" />
       <div class="text">
         <div class="text-top">조류속도</div>
-        <div class="text-bottom">{{ props.data.wave_velocity }} <span style="font-size: 24px">cm/s</span></div>
+        <div class="text-bottom">
+          {{ props.data.wave_velocity }}
+          <span style="font-size: 24px">cm/s</span>
+        </div>
       </div>
     </div>
   </div>
@@ -36,14 +44,11 @@
 
 <script>
 // import { reactive } from '@vue/reactivity';
-import { onMounted } from '@vue/runtime-core';
 export default {
   props: {
     data: Object,
   },
   setup(props) {
-    onMounted(() => {});
-
     return { props };
   },
 };

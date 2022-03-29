@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Index from '../navigation/dashboard/IndexNav.vue';
 import Main from '../navigation/dashboard/main/MainNav.vue';
 import Detail from '../navigation/dashboard/detail/DetailNav.vue';
-
+import Setting from '../components/dashboard/setting/Setting.vue';
 const routes = [
   {
     path: '/',
@@ -19,6 +19,11 @@ const routes = [
         path: '/detail',
         name: 'Detail',
         component: Detail,
+      },
+      {
+        path: '/setting',
+        name: 'Setting',
+        component: Setting,
       },
     ],
   },

@@ -71,7 +71,8 @@ export default {
   border-radius: 10px 10px 10px 10px;
   text-decoration: none;
   color: #4f678c;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
 }
 
 .nav a.router-link-active {
@@ -79,6 +80,7 @@ export default {
   background: #ffffff;
   color: #4f678c;
   border-radius: 10px 10px 10px 10px;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
 }
 </style>
