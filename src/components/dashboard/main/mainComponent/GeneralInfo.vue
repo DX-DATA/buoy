@@ -1,9 +1,36 @@
 <template>
   <div class="generalInfo-container">
-    <div class="cast item">현재 날씨 {{ props.data.cast }}</div>
-    <div class="temp item">현재 기온 {{ props.data.temperature }}</div>
-    <div class="wind item">현재 풍속 {{ props.data.wind }}</div>
-    <div class="wave item">조류 속도 {{ props.data.wave_velocity }}</div>
+    <div class="cast item">
+      <img class="icon" :src="require('../../../../assets/sunny.svg')" />
+      <div class="text">
+        <div class="text-top">현재날씨</div>
+        <div class="text-bottom">맑음<span style="font-size: 24px"></span></div>
+      </div>
+    </div>
+    <div class="temp item">
+      <img class="icon" :src="require('../../../../assets/temperature.svg')" />
+      <div class="text">
+        <div class="text-top">온도</div>
+        <div class="text-bottom">
+          {{ props.data.temperature }}
+          <span style="font-size: 24px">℃</span>
+        </div>
+      </div>
+    </div>
+    <div class="wind item">
+      <img style="height: 64px; margin: 0 auto" :src="require('../../../../assets/wind.svg')" />
+      <div class="text">
+        <div class="text-top">풍속</div>
+        <div class="text-bottom">{{ props.data.wind }} <span style="font-size: 24px">cm/s</span></div>
+      </div>
+    </div>
+    <div class="wave item">
+      <img class="icon" :src="require('../../../../assets/wave.svg')" />
+      <div class="text">
+        <div class="text-top">조류속도</div>
+        <div class="text-bottom">{{ props.data.wave_velocity }} <span style="font-size: 24px">cm/s</span></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -25,9 +52,10 @@ export default {
 <style scoped>
 .generalInfo-container {
   width: 100%;
-  grid-template-columns: 0.9fr 1fr;
-  padding: 32px 0px 32px 0px;
+  grid-template-columns: 1fr 1fr;
+  padding: 12px 10px 12px 10px;
   height: 220px;
+  gap: 5px;
   display: grid;
   background: #f8f8f8;
   border: 1px solid #cbcbcb;
@@ -36,13 +64,42 @@ export default {
 }
 
 .item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   justify-content: center;
   align-items: center;
   column-gap: 8px;
 }
 
-.temp {
+.icon {
+  width: 84px;
+  margin: 0 auto;
+}
+
+.text {
+  display: flex;
+  height: 85px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-top {
+  font-family: 'GmarketSansMedium';
+  font-size: 24px;
+  text-align: center;
+
+  color: #8d8682;
+}
+
+.text-bottom {
+  font-family: 'GmarketSansMedium';
+  font-weight: bold;
+  font-size: 36px;
+  text-align: center;
+}
+
+.temp2 {
   font-family: 'GmarketSansMedium';
   font-weight: bold;
   font-size: 36px;

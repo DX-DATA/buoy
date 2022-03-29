@@ -23,17 +23,17 @@ export default {
 
 <style scoped>
 .card-container {
-  width: 630px;
-  height: 340px;
-  margin: 100px auto 0px auto;
+  width: 220px;
+  height: 120px;
+  margin: 80px auto 0px auto;
   background: #f8f8f8;
   box-shadow: 0px 4px 4px rgba(178, 178, 207, 0.44);
   border-radius: 15px;
-  gap: 5px;
+  padding: 5px;
   display: grid;
   justify-items: center;
   align-content: center;
-  grid-template-columns: 1.5fr 2fr;
+  grid-template-columns: 0.6fr 1fr;
   grid-template-rows: 1fr 1fr;
   grid-template-areas:
     'icon description'
@@ -48,18 +48,19 @@ export default {
 }
 
 .icon > img {
-  width: 144px;
+  width: 62px;
 }
 
 .description {
   grid-area: description;
-  width: 250px;
+  width: 110px;
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 36px;
+  font-size: 16px;
   font-family: 'GmarketSansMedium';
   text-align: center;
+  color: #7e8092;
 }
 
 .measure {
@@ -67,7 +68,7 @@ export default {
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 56px;
+  font-size: 32px;
   font-family: 'GmarketSansMedium';
 }
 </style>
