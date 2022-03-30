@@ -3,40 +3,44 @@
     <div class="linear" ref="linear">
       <div class="line" v-on:click="onClick">
         <div class="circle"></div>
+        <div class="circle pink"></div>
         <div class="circle"></div>
         <div class="circle"></div>
         <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+        <div class="circle pink"></div>
         <div class="circle"></div>
         <div class="circle"></div>
       </div>
-      <img
-        :src="require('@/assets/bottom_arrow.svg')"
-        style="cursor: pointer"
-        v-if="!state.isClicked"
-        v-on:click="onClick"
-      />
-      <img
-        :src="require('@/assets/top_arrow.svg')"
-        style="cursor: pointer"
-        v-if="state.isClicked"
-        v-on:click="onClick"
-      />
+      <img :src="require('@/assets/bottom_arrow.svg')" style="cursor: pointer" v-if="!state.isClicked" v-on:click="onClick" />
+      <img :src="require('@/assets/top_arrow.svg')" style="cursor: pointer" v-if="state.isClicked" v-on:click="onClick" />
 
       <div class="detail-info" v-if="state.isClicked">
         <hr />
-        <canvas id="myChart" width="400" height="400" ref="myChart"></canvas>
+        <div class="detail-item">
+          <div class="detail-text">부표 개수</div>
+          <div>스마트 부표 10개 일반 부표 90개</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-text">높이</div>
+          <LineChart :chartData="lineData" :options="lineOption" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { reactive, ref } from '@vue/reactivity';
+import { reactive, ref, computed } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
+import { LineChart } from 'vue-chart-3';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
+
 export default {
-  components: {},
+  components: {
+    LineChart,
+  },
   setup() {
     let linear = ref(null);
     let state = reactive({
@@ -56,7 +60,34 @@ export default {
 
     onMounted(() => {});
 
-    return { state, onClick, linear };
+    const lineData = computed(() => ({
+      labels: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6],
+      datasets: [
+        {
+          label: '높이',
+          data: [1, 2, 3, 4, 5, 3, 2, 1, 2],
+          pointBackgroundColor: 'white',
+          borderWidth: 1,
+          borderColor: '#77CEFF',
+          pointBorderColor: 'black',
+        },
+      ],
+    }));
+    const lineOption = ref({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+        },
+        title: {
+          display: true,
+          text: '일주간 높이 변화',
+          position: 'top',
+        },
+      },
+    });
+
+    return { state, onClick, linear, lineData, lineOption };
   },
 };
 </script>
@@ -68,7 +99,6 @@ export default {
   background: #ffffff;
   border-radius: 20px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  padding: 0px 5px 0px 5px;
   display: grid;
   align-items: center;
   align-content: stretch;
@@ -86,23 +116,46 @@ export default {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  margin: 0 auto;
 }
 
 .circle {
-  background: #ff7777;
+  background: #c0e4e9;
   border-radius: 100px;
-  border: 15px solid #ff7777;
+  border: 15px solid #c0e4e9;
   margin: -13px -2px 0px -2px;
+}
+
+.pink {
+  background: #ffd1da !important;
+  border-color: #ffd1da !important;
 }
 
 .detail-info {
   grid-column: 1 / 3;
   padding: 0px 10px 0px 10px;
+  display: grid;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-item {
+  display: grid;
+  margin-top: 5px;
+  grid-template-columns: 0.2fr 1fr;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-text {
+  font-weight: bold;
+  font-size: 24px;
+  font-family: 'GmarketSansMedium';
+  text-align: center;
 }
 
 .scale_up {
-  -webkit-animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1)
-    both;
+  -webkit-animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
