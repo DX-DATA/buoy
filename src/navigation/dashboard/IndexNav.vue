@@ -30,7 +30,7 @@ export default {
   display: grid;
   background: #e6e7eb;
   grid-template-columns: 0.2fr 1fr;
-  grid-template-rows: 0.1fr 1fr;
+  grid-template-rows: 101px 1fr;
   grid-template-areas:
     'nav header'
     'nav content';
@@ -53,7 +53,6 @@ export default {
 .header-nav {
   grid-area: header;
   background: white;
-
   padding: 0px 48px 0px 48px;
 }
 

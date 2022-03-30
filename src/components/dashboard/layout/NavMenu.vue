@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <div class="logo">로고영역임니다</div>
+    <div class="logo">Logo</div>
     <hr class="line" />
 
     <div class="button-group">

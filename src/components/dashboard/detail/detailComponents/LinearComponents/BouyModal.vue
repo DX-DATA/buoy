@@ -1,0 +1,259 @@
+<template>
+  <div class="modal">
+    <div class="buoy-modal-header">{{ props.data.number }}번 부표</div>
+    <hr />
+
+    <div class="text-info">
+      <div>
+        <span class="info-top">현재높이</span
+        ><span class="info-bottom">{{ props.data.height }} cm</span>
+      </div>
+      <div>
+        <span class="info-top">현재무게</span
+        ><span class="info-bottom"> {{ props.data.weight }} kg </span>
+      </div>
+      <div>
+        <span class="info-top">그외 정보</span
+        ><span class="info-bottom"> 12 m/s </span>
+      </div>
+      <div>
+        <span class="info-top">그외 정보</span
+        ><span class="info-bottom"> 10 psu </span>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="buoy-modal-content">
+      <div class="info-bottom">높이 이력</div>
+      <LineChart :chartData="lineData" :options="lineOption" />
+
+      <div class="info-bottom">무게 이력</div>
+      <LineChart :chartData="lineData" :options="lineOption" />
+    </div>
+  </div>
+</template>
+
+<script>
+import { LineChart } from 'vue-chart-3';
+import { Chart, registerables } from 'chart.js';
+import { ref, computed } from '@vue/reactivity';
+
+Chart.register(...registerables);
+
+export default {
+  props: {
+    data: Object,
+  },
+  emits: [''],
+  components: {
+    LineChart,
+  },
+  setup(props) {
+    console.log(props.data);
+
+    const lineData = computed(() => ({
+      labels: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7],
+      datasets: [
+        {
+          label: '라인 평균 높이',
+          data: [1, 2, 3, 4, 5, 3, 3, 1, 2],
+          pointBackgroundColor: 'white',
+          borderWidth: 2,
+          borderColor: '#77CEFF',
+          pointBorderColor: 'black',
+        },
+      ],
+    }));
+    const lineOption = ref({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+        },
+        title: {
+          display: true,
+          text: '일주간 높이 변화',
+          position: 'top',
+        },
+      },
+    });
+
+    const lineData2 = computed(() => ({
+      labels: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7],
+      datasets: [
+        {
+          label: '라인 평균 무게',
+          data: [21, 22, 23, 24, 25, 26, 27, 28, 29],
+          pointBackgroundColor: 'white',
+          borderWidth: 2,
+          borderColor: '#black',
+          pointBorderColor: 'black',
+        },
+      ],
+    }));
+    const lineOption2 = ref({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+        },
+        title: {
+          display: true,
+          text: '일주간 무게 변화',
+          position: 'top',
+        },
+      },
+    });
+
+    return { props, lineData, lineData2, lineOption, lineOption2 };
+  },
+};
+</script>
+
+<style scoped>
+.modal {
+  z-index: 102;
+  width: 60vw;
+  height: 70vh;
+  background: white;
+  position: fixed;
+  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
+    both;
+  animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  top: 15vh;
+  left: 22.5vw;
+  border: 1px solid #cbcbcb;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.44);
+  border-radius: 5px;
+  overflow-y: scroll;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.modal::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.1);
+}
+.modal::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+.modal::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.buoy-modal-header {
+  text-align: center;
+  font-family: 'GmarketSansMedium';
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.text-info {
+  display: grid;
+  align-items: center;
+  gap: 5px;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 10px;
+  width: 80%;
+  margin: 10px auto;
+}
+
+.text-info > div {
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-top {
+  color: #8d8682;
+  font-family: 'GmarketSansMedium';
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info-bottom {
+  font-family: 'GmarketSansMedium';
+  font-size: 28px;
+  font-weight: bold;
+}
+.buoy-modal-content {
+  display: grid;
+  align-items: center;
+
+  gap: 5px;
+  grid-template-columns: 0.2fr 1fr;
+}
+
+.button-blue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+  margin: 0 auto;
+  background: #748bde;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 36px;
+  font-family: 'GmarketSansMedium';
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.selected {
+  background: #cbcbcb;
+  cursor: default;
+}
+
+.scale-up-center {
+  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
+    both;
+  animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+/* ----------------------------------------------
+ * Generated by Animista on 2022-3-29 14:47:0
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info.
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation scale-up-center
+ * ----------------------------------------
+ */
+@-webkit-keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+@keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+</style>

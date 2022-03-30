@@ -3,48 +3,65 @@
     <div class="linear" ref="linear">
       <div class="line" v-on:click="onClick">
         <div class="circle"></div>
-        <div class="circle pink"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
         <div class="circle"></div>
         <div class="circle pink"></div>
         <div class="circle"></div>
         <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle pink"></div>
+        <div class="circle"></div>
+        <div class="circle pink"></div>
       </div>
-      <img :src="require('@/assets/bottom_arrow.svg')" style="cursor: pointer" v-if="!state.isClicked" v-on:click="onClick" />
-      <img :src="require('@/assets/top_arrow.svg')" style="cursor: pointer" v-if="state.isClicked" v-on:click="onClick" />
+      <img
+        :src="require('@/assets/bottom_arrow.svg')"
+        style="cursor: pointer"
+        v-if="!state.isClicked"
+        v-on:click="onClick"
+      />
+      <img
+        :src="require('@/assets/top_arrow.svg')"
+        style="cursor: pointer"
+        v-if="state.isClicked"
+        v-on:click="onClick"
+      />
 
-      <div class="detail-info" v-if="state.isClicked">
-        <hr />
-        <div class="detail-item">
-          <div class="detail-text">부표 개수</div>
-          <div>스마트 부표 10개 일반 부표 90개</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-text">높이</div>
-          <LineChart :chartData="lineData" :options="lineOption" />
-        </div>
-      </div>
+      <Detailinfo v-if="state.isClicked" @onclickBouyMenu="onclickBouyMenu" />
+
+      <div
+        class="modal-wrapper fade-in"
+        ref="modal_wrapper"
+        v-on:click="closeModal"
+      ></div>
     </div>
+
+    <BouyModal v-if="state.isBouyModal" :data="state.modalData" />
+
+    <div
+      class="modal-wrapper fade-in"
+      ref="modal_wrapper"
+      v-on:click="closeModal"
+    ></div>
   </div>
 </template>
 
 <script>
-import { reactive, ref, computed } from '@vue/reactivity';
+import { reactive, ref } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
-import { LineChart } from 'vue-chart-3';
-import { Chart, registerables } from 'chart.js';
-
-Chart.register(...registerables);
+import Detailinfo from './LinearComponents/Detail_info.vue';
+import BouyModal from './LinearComponents/BouyModal.vue';
 
 export default {
-  components: {
-    LineChart,
-  },
+  components: { Detailinfo, BouyModal },
+
   setup() {
     let linear = ref(null);
+    const modal_wrapper = ref(null);
+
     let state = reactive({
       isClicked: false,
+      isBouyModal: false,
+      modalData: {},
     });
 
     function onClick() {
@@ -52,42 +69,33 @@ export default {
 
       if (state.isClicked) {
         linear.value.appendC;
-        linear.value.style.height = '600px';
+        linear.value.style.height = 'auto';
       } else {
         linear.value.style.height = '60px';
       }
     }
 
+    function onclickBouyMenu(data) {
+      state.modalData = data;
+      state.isBouyModal = true;
+      modal_wrapper.value.style.display = 'block';
+    }
+
+    function closeModal() {
+      state.isBouyModal = false;
+      modal_wrapper.value.style.display = 'none';
+    }
+
     onMounted(() => {});
 
-    const lineData = computed(() => ({
-      labels: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6],
-      datasets: [
-        {
-          label: '높이',
-          data: [1, 2, 3, 4, 5, 3, 2, 1, 2],
-          pointBackgroundColor: 'white',
-          borderWidth: 1,
-          borderColor: '#77CEFF',
-          pointBorderColor: 'black',
-        },
-      ],
-    }));
-    const lineOption = ref({
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom',
-        },
-        title: {
-          display: true,
-          text: '일주간 높이 변화',
-          position: 'top',
-        },
-      },
-    });
-
-    return { state, onClick, linear, lineData, lineOption };
+    return {
+      state,
+      onClick,
+      linear,
+      closeModal,
+      onclickBouyMenu,
+      modal_wrapper,
+    };
   },
 };
 </script>
@@ -110,8 +118,8 @@ export default {
 .line {
   width: 90%;
   height: 2px;
-  border: 1px solid #748bde;
-  background: #748bde;
+  border: 1px solid #a1c2c9;
+  background: #a1c2c9;
   border-radius: 2px;
   display: flex;
   justify-content: space-between;
@@ -126,36 +134,25 @@ export default {
   margin: -13px -2px 0px -2px;
 }
 
+.modal-wrapper {
+  display: none;
+  z-index: 101;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  background: rgb(0, 0, 0, 0.5);
+}
+
 .pink {
   background: #ffd1da !important;
   border-color: #ffd1da !important;
 }
 
-.detail-info {
-  grid-column: 1 / 3;
-  padding: 0px 10px 0px 10px;
-  display: grid;
-  display: flex;
-  flex-direction: column;
-}
-
-.detail-item {
-  display: grid;
-  margin-top: 5px;
-  grid-template-columns: 0.2fr 1fr;
-  align-items: center;
-  justify-content: center;
-}
-
-.detail-text {
-  font-weight: bold;
-  font-size: 24px;
-  font-family: 'GmarketSansMedium';
-  text-align: center;
-}
-
 .scale_up {
-  -webkit-animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  -webkit-animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1)
+    both;
   animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 

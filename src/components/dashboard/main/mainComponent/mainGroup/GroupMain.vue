@@ -1,13 +1,24 @@
 <template>
   <div class="main-group-container">
-    <div class="top_menu"><img class="menu-svg" src="../../../../../assets/list.svg" v-on:click="onclickMenu" /></div>
+    <div class="top_menu">
+      <img
+        class="menu-svg"
+        src="../../../../../assets/list.svg"
+        v-on:click="onclickMenu"
+      />
+    </div>
 
     <hr class="head_line" />
 
     <div class="content">
       <div class="info-area" v-for="data in state.content" :key="data">
         <div class="title">
-          <button class="area-button" v-on:click="detail(data.name.slice(0, 1))">{{ data.name }}</button>
+          <button
+            class="area-button"
+            v-on:click="detail(data.name.slice(0, 1))"
+          >
+            {{ data.name }}
+          </button>
         </div>
 
         <InfoCard :data="data.data[0]" />
@@ -36,7 +47,11 @@
 
     <ListModal @setlist="setlist" v-if="state.isModal" />
 
-    <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
+    <div
+      class="modal-wrapper fade-in"
+      ref="modal_wrapper"
+      v-on:click="closeModal"
+    ></div>
   </div>
 </template>
 
@@ -130,7 +145,15 @@ export default {
       });
     }
 
-    return { state, onclickMenu, setlist, closeModal, detail, modal, modal_wrapper };
+    return {
+      state,
+      onclickMenu,
+      setlist,
+      closeModal,
+      detail,
+      modal,
+      modal_wrapper,
+    };
   },
 };
 </script>
@@ -284,12 +307,14 @@ export default {
 /* anim */
 
 .slide-in-fwd-center {
-  -webkit-animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  -webkit-animation: slide-in-fwd-center 0.4s
+    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 .scale-up-center {
-  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
+    both;
   animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 /* ----------------------------------------------
