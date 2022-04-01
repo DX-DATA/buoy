@@ -40,16 +40,37 @@ export default {
     let state = reactive({
       warning: [
         {
-          buoy: 'A',
-          msg: '구역 2번 라인의 높이가 낮습니다.',
+          area: 'A',
+          line: 2,
+          warn: {
+            type: 'height',
+            status: 'row',
+          },
         },
         {
-          buoy: 'B',
-          msg: '구역 3번 라인의 무게가 용적량 한계에 도달합니다.',
+          area: 'B',
+          line: 3,
+          warn: {
+            type: 'weight',
+            status: 'full',
+          },
         },
         {
-          buoy: 'C',
-          msg: '구역 5번 라인 1번 스마트 부표의 위치를 확인해 주세요.',
+          area: 'C',
+          line: 3,
+          warn: {
+            type: 'location',
+            target: 1,
+            status: 'mssing',
+          },
+        },
+        {
+          area: 'D',
+          line: 7,
+          warn: {
+            type: 'height',
+            status: 'row',
+          },
         },
       ],
       generalInfo: {

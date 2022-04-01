@@ -1,4 +1,5 @@
 <template>
+  <div class="text">라인 {{ props.line.number }}</div>
   <div>
     <div class="linear" ref="linear">
       <div class="line" v-on:click="onClick">
@@ -13,35 +14,17 @@
         <div class="circle"></div>
         <div class="circle pink"></div>
       </div>
-      <img
-        :src="require('@/assets/bottom_arrow.svg')"
-        style="cursor: pointer"
-        v-if="!state.isClicked"
-        v-on:click="onClick"
-      />
-      <img
-        :src="require('@/assets/top_arrow.svg')"
-        style="cursor: pointer"
-        v-if="state.isClicked"
-        v-on:click="onClick"
-      />
+      <img :src="require('@/assets/bottom_arrow.svg')" style="cursor: pointer" v-if="!state.isClicked" v-on:click="onClick" />
+      <img :src="require('@/assets/top_arrow.svg')" style="cursor: pointer" v-if="state.isClicked" v-on:click="onClick" />
 
       <Detailinfo v-if="state.isClicked" @onclickBouyMenu="onclickBouyMenu" />
 
-      <div
-        class="modal-wrapper fade-in"
-        ref="modal_wrapper"
-        v-on:click="closeModal"
-      ></div>
+      <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
     </div>
 
     <BouyModal v-if="state.isBouyModal" :data="state.modalData" />
 
-    <div
-      class="modal-wrapper fade-in"
-      ref="modal_wrapper"
-      v-on:click="closeModal"
-    ></div>
+    <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
   </div>
 </template>
 
@@ -50,13 +33,15 @@ import { reactive, ref } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
 import Detailinfo from './LinearComponents/Detail_info.vue';
 import BouyModal from './LinearComponents/BouyModal.vue';
+import { useRoute } from 'vue-router';
 
 export default {
   components: { Detailinfo, BouyModal },
-
-  setup() {
+  props: { line: Object },
+  setup(props) {
     let linear = ref(null);
     const modal_wrapper = ref(null);
+    const route = useRoute();
 
     let state = reactive({
       isClicked: false,
@@ -86,7 +71,21 @@ export default {
       modal_wrapper.value.style.display = 'none';
     }
 
-    onMounted(() => {});
+    onMounted(() => {
+      if (route.params.data) {
+        let data = JSON.parse(route.params.data);
+
+        if (data.line == props.line.number) {
+          console.log(window.pageYOffset + linear.value.getBoundingClientRect().top + 300);
+
+          onClick();
+
+          setTimeout(() => {
+            window.scrollTo({ top: window.pageYOffset + linear.value.getBoundingClientRect().top, behavior: 'smooth' });
+          }, 20);
+        }
+      }
+    });
 
     return {
       state,
@@ -95,6 +94,7 @@ export default {
       closeModal,
       onclickBouyMenu,
       modal_wrapper,
+      props,
     };
   },
 };
@@ -127,6 +127,11 @@ export default {
   margin: 0 auto;
 }
 
+.text {
+  font-weight: bold;
+  font-size: 32px;
+}
+
 .circle {
   background: #c0e4e9;
   border-radius: 100px;
@@ -151,8 +156,7 @@ export default {
 }
 
 .scale_up {
-  -webkit-animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1)
-    both;
+  -webkit-animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-ver-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 

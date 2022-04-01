@@ -7,37 +7,16 @@
         <div v-if="state.isModify" class="select-wrapper">
           <select>
             <option>일반 수하식</option>
-            <option>병렬 수하식</option>
+            <option>연승 수하식</option>
+            <option>뗏목 수하식</option>
+            <option>기타 수하식</option>
           </select>
         </div>
       </div>
-      <button class="manage-button" v-if="!state.isModify" v-on:click="init">
-        구역 관리
-      </button>
-      <button class="modify-button" v-if="state.isModify" v-on:click="init">
-        수정
-      </button>
+      <button class="manage-button" v-if="!state.isModify" v-on:click="init">구역 관리</button>
+      <button class="modify-button" v-if="state.isModify" v-on:click="init">수정</button>
     </div>
-    <div class="text">라인 1</div>
-    <DetailLinear />
-    <div class="text">라인 2</div>
-    <DetailLinear />
-    <div class="text">라인 3</div>
-    <DetailLinear />
-    <div class="text">라인 4</div>
-    <DetailLinear />
-    <div class="text">라인 5</div>
-    <DetailLinear />
-    <div class="text">라인 6</div>
-    <DetailLinear />
-    <div class="text">라인 7</div>
-    <DetailLinear />
-    <div class="text">라인 8</div>
-    <DetailLinear />
-    <div class="text">라인 9</div>
-    <DetailLinear />
-    <div class="text">라인 10</div>
-    <DetailLinear />
+    <DetailLinear v-for="line in state.line" :key="line" :line="line" />
 
     <div class="plus-line" v-if="state.isModify" v-on:click="onclickMenu">
       <img class="plus-icon" :src="require('@/assets/circle-plus.svg')" />
@@ -46,27 +25,39 @@
 
   <PlusModal v-if="state.isModal" />
 
-  <div
-    class="modal-wrapper fade-in"
-    ref="modal_wrapper"
-    v-on:click="closeModal"
-  ></div>
+  <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
 </template>
 
 <script>
 import { reactive, ref } from '@vue/reactivity';
 import DetailLinear from './detailComponents/DetailLinear.vue';
 import PlusModal from './detailComponents/LinearComponents/PlusModal.vue';
+import { onMounted } from '@vue/runtime-core';
 export default {
   components: { DetailLinear, PlusModal },
   props: { name: String },
   setup(props) {
     const modal_wrapper = ref(null);
     console.log(props.name);
+
     let state = reactive({
       isModify: false,
       isModal: false,
+      line: [
+        { number: 1, data: 'foo' },
+        { number: 2, data: 'foo' },
+        { number: 3, data: 'foo' },
+        { number: 4, data: 'foo' },
+        { number: 5, data: 'foo' },
+        { number: 6, data: 'foo' },
+        { number: 7, data: 'foo' },
+        { number: 8, data: 'foo' },
+        { number: 9, data: 'foo' },
+        { number: 10, data: 'foo' },
+      ],
     });
+
+    onMounted(() => {});
 
     function onclickMenu() {
       state.isModal = true;

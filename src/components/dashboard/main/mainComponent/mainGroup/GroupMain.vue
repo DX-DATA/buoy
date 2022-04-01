@@ -1,11 +1,7 @@
 <template>
   <div class="main-group-container">
     <div class="top_menu">
-      <img
-        class="menu-svg"
-        src="../../../../../assets/list.svg"
-        v-on:click="onclickMenu"
-      />
+      <img class="menu-svg" src="../../../../../assets/list.svg" v-on:click="onclickMenu" />
     </div>
 
     <hr class="head_line" />
@@ -13,45 +9,26 @@
     <div class="content">
       <div class="info-area" v-for="data in state.content" :key="data">
         <div class="title">
-          <button
-            class="area-button"
-            v-on:click="detail(data.name.slice(0, 1))"
-          >
+          <button class="area-button" v-on:click="detail(data.name.slice(0, 1))">
             {{ data.name }}
           </button>
         </div>
 
-        <InfoCard :data="data.data[0]" />
-        <div class="line"><div class="circle"></div></div>
-        <div class="left_message message">평균 높이입니다</div>
-
-        <div class="right_message_wrapper">
-          <div class="right_message message warn-text">주의 하셔야 해요</div>
-        </div>
-        <div class="line"><div class="circle"></div></div>
-        <InfoCard :data="data.data[1]" />
-
-        <InfoCard :data="data.data[2]" />
-        <div class="line"><div class="circle"></div></div>
-        <div class="left_message message">평균 값입니다</div>
+        <InfoCard v-for="(content, index) in data.data" :key="content" :data="content" :side="index % 2 == 0 ? 'left' : 'right'" />
 
         <div class="empty"></div>
         <div class="line"></div>
         <div></div>
 
         <div class="map-area">
-          <MainLocation />
+          <MainLocation :location="data.location" />
         </div>
       </div>
     </div>
 
     <ListModal @setlist="setlist" v-if="state.isModal" />
 
-    <div
-      class="modal-wrapper fade-in"
-      ref="modal_wrapper"
-      v-on:click="closeModal"
-    ></div>
+    <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
   </div>
 </template>
 
@@ -92,7 +69,17 @@ export default {
               description: '그외 다른 정보',
               data: '40cm',
             },
+            {
+              icon: 'capacity',
+              description: '평균 수용량',
+              data: '60%',
+            },
           ],
+          location: {
+            center: { lat: 34.7972552, lon: 128.4642089 },
+            sw: { lat: 34.7972552, lon: 128.4642089 },
+            ne: { lat: 34.7973552, lon: 128.4643089 },
+          },
         },
         {
           name: 'B구역',
@@ -112,7 +99,17 @@ export default {
               description: '그외 다른 정보',
               data: '20cm',
             },
+            {
+              icon: 'capacity',
+              description: '평균 수용량',
+              data: '90%',
+            },
           ],
+          location: {
+            center: { lat: 34.7972552, lon: 128.4642089 },
+            sw: { lat: 34.7974552, lon: 128.4643089 },
+            ne: { lat: 34.7975552, lon: 128.4644089 },
+          },
         },
       ],
     });
@@ -219,80 +216,6 @@ export default {
   justify-content: center;
 }
 
-.line {
-  margin: 0 auto;
-  width: 1px;
-  background: #748bde;
-  border: 4px solid #748bde;
-}
-
-.circle {
-  border-radius: 100px;
-  border: 18px solid #748bde;
-  margin-top: 50px;
-  margin-left: -17.5px;
-}
-
-.message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 18px;
-  font-family: 'GmarketSansMedium';
-}
-
-.left_message {
-  position: relative;
-  margin: 50px 0px 30px 10px;
-  width: 200px;
-  height: 50px;
-  background: white;
-  border-radius: 60px;
-}
-
-.left_message:after {
-  border-top: 15px solid white;
-  border-left: 15px solid transparent;
-  border-right: 0px solid transparent;
-  border-bottom: 0px solid transparent;
-  content: '';
-  position: absolute;
-  top: 15px;
-  left: -14px;
-}
-
-.right_message_wrapper {
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 15px;
-}
-
-.right_message {
-  position: relative;
-  margin: 50px 0px 30px 25px;
-  width: 200px;
-  height: 50px;
-  background: white;
-  border-radius: 60px;
-}
-
-.right_message:after {
-  border-top: 15px solid rgb(255, 200, 30);
-  border-left: 0px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 0px solid transparent;
-  content: '';
-  position: absolute;
-  top: 15px;
-  left: 199px;
-}
-
-.warn-text {
-  background: rgb(255, 200, 30);
-  color: black;
-}
-
 .modal-wrapper {
   display: none;
   z-index: 101;
@@ -304,17 +227,22 @@ export default {
   background: rgb(0, 0, 0, 0.5);
 }
 
+.line {
+  margin: 0 auto;
+  width: 1px;
+  background: #748bde;
+  border: 4px solid #748bde;
+}
+
 /* anim */
 
 .slide-in-fwd-center {
-  -webkit-animation: slide-in-fwd-center 0.4s
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  -webkit-animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 .scale-up-center {
-  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
-    both;
+  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 /* ----------------------------------------------

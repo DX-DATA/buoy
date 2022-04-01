@@ -7,11 +7,10 @@ import { onMounted, ref } from '@vue/runtime-core';
 
 export default {
   props: {
-    data: Object,
+    location: Object,
   },
   setup(props) {
     let map = ref(null);
-
     onMounted(() => {
       if (window.kakao && window.kakao.maps) {
         initMap();
@@ -19,33 +18,37 @@ export default {
         const script = document.createElement('script');
         /* global kakao */
         script.onload = () => kakao.maps.load(initMap);
-        script.src =
-          '//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=6f658858e3f911133199902d12e31f4b';
+        script.src = '//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=6f658858e3f911133199902d12e31f4b';
         document.head.appendChild(script);
       }
     });
 
     function initMap() {
       var options = {
-        center: new kakao.maps.LatLng(34.7972552, 128.4642089),
+        center: new kakao.maps.LatLng(props.location.center.lat, props.location.center.lon),
         level: 1,
       };
 
-      let icon = new kakao.maps.MarkerImage(
-        '/pin.svg',
-        new kakao.maps.Size(18, 18)
-      );
+      let icon = new kakao.maps.MarkerImage('/pin.svg', new kakao.maps.Size(18, 18));
 
       let kakao_map = new kakao.maps.Map(ref(map).value, options);
 
-      let markerPosition = new kakao.maps.LatLng(34.7973, 128.46425);
+      console.log(props.location);
+      let center = {
+        lat: (props.location.sw.lat + props.location.ne.lat) / 2,
+        lon: (props.location.sw.lon + props.location.ne.lon) / 2,
+      };
+
+      console.log(center);
+
+      let markerPosition = new kakao.maps.LatLng(center.lat, center.lon);
       let marker = new kakao.maps.Marker({
         position: markerPosition,
         image: icon,
       });
 
-      let sw = new kakao.maps.LatLng(34.7972552, 128.4642089); // 사각형 영역의 남서쪽 좌표
-      let ne = new kakao.maps.LatLng(34.7973552, 128.4643089); // 사각형 영역의 북동쪽 좌표
+      let sw = new kakao.maps.LatLng(props.location.sw.lat, props.location.sw.lon); // 사각형 영역의 남서쪽 좌표
+      let ne = new kakao.maps.LatLng(props.location.ne.lat, props.location.ne.lon); // 사각형 영역의 북동쪽 좌표
 
       // 사각형을 구성하는 영역정보를 생성합니다
       // 사각형을 생성할 때 영역정보는 LatLngBounds 객체로 넘겨줘야 합니다
