@@ -1,18 +1,11 @@
 <template>
   <div class="detail-info">
-    <hr />
-
     <div class="detail-item">
       <div class="detail-text full">부표별 상세 정보</div>
       <div></div>
     </div>
     <div class="bouy-grid">
-      <BoySpecify
-        v-for="data in bouyData"
-        :key="data"
-        :data="data"
-        v-on:click="onClickBouyImg(data)"
-      />
+      <BoySpecify v-for="data in bouyData" :key="data" :data="data" v-on:click="onClickBouyImg(data)" />
     </div>
 
     <div class="detail-item">
@@ -22,9 +15,7 @@
         <span class="title-text">일반 부표</span>
         <span class="content-text">10개</span>
         <span class="content-text" v-if="!state.modify">90개</span>
-        <span class="content-text" v-if="state.modify"
-          ><input type="text" class="modify-text" :value="90"
-        /></span>
+        <span class="content-text" v-if="state.modify"><input type="text" class="modify-text" :value="90" /></span>
       </div>
     </div>
 
@@ -39,12 +30,8 @@
     </div>
 
     <div class="modify-wrapper">
-      <div class="modify" v-on:click="onClickModify" v-if="!state.modify">
-        개수 수정
-      </div>
-      <div class="modify2" v-on:click="onClickModify" v-if="state.modify">
-        완료
-      </div>
+      <div class="modify" v-on:click="onClickModify" v-if="!state.modify">개수 수정</div>
+      <div class="modify2" v-on:click="onClickModify" v-if="state.modify">완료</div>
     </div>
 
     <hr />
@@ -78,6 +65,7 @@ import { Chart, registerables } from 'chart.js';
 import { ref, computed, reactive } from '@vue/reactivity';
 import BoySpecify from './BoySpecify.vue';
 import LineLocation from './LineLocation.vue';
+import { onMounted } from '@vue/runtime-core';
 Chart.register(...registerables);
 
 export default {
@@ -86,6 +74,7 @@ export default {
     BoySpecify,
     LineLocation,
   },
+  props: { line: Object },
   emits: ['onclickBouyMenu'],
   setup(props, context) {
     const lineData = computed(() => ({
@@ -171,6 +160,10 @@ export default {
       state.modify = !state.modify;
     }
 
+    onMounted(() => {
+      console.log(props.line);
+    });
+
     return {
       lineData,
       lineOption,
@@ -188,11 +181,13 @@ export default {
 
 <style scoped>
 .detail-info {
-  grid-column: 1 / 3;
+  grid-column: 1 / 4;
   padding: 0px 30px 0px 30px;
-  display: grid;
   display: flex;
   flex-direction: column;
+  background: #f9f9f9;
+  border: 1px solid #c4c9d3;
+  box-shadow: 4px 4px 7px rgba(189, 193, 215, 0.25);
 }
 
 .table-grid {

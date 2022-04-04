@@ -16,25 +16,20 @@
       <button class="manage-button" v-if="!state.isModify" v-on:click="init">구역 관리</button>
       <button class="modify-button" v-if="state.isModify" v-on:click="init">수정</button>
     </div>
-    <DetailLinear v-for="line in state.line" :key="line" :line="line" />
 
-    <div class="plus-line" v-if="state.isModify" v-on:click="onclickMenu">
-      <img class="plus-icon" :src="require('@/assets/circle-plus.svg')" />
-    </div>
+    <!-- <DetailLinear v-for="line in state.line" :key="line" :line="line" /> -->
+    <NewDetailLinear :line="state.line" />
   </div>
-
-  <PlusModal v-if="state.isModal" />
 
   <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
 </template>
 
 <script>
 import { reactive, ref } from '@vue/reactivity';
-import DetailLinear from './detailComponents/DetailLinear.vue';
-import PlusModal from './detailComponents/LinearComponents/PlusModal.vue';
+import NewDetailLinear from './detailComponents/NewDetailLinear.vue';
 import { onMounted } from '@vue/runtime-core';
 export default {
-  components: { DetailLinear, PlusModal },
+  components: { NewDetailLinear },
   props: { name: String },
   setup(props) {
     const modal_wrapper = ref(null);
@@ -44,16 +39,422 @@ export default {
       isModify: false,
       isModal: false,
       line: [
-        { number: 1, data: 'foo' },
-        { number: 2, data: 'foo' },
-        { number: 3, data: 'foo' },
-        { number: 4, data: 'foo' },
-        { number: 5, data: 'foo' },
-        { number: 6, data: 'foo' },
-        { number: 7, data: 'foo' },
-        { number: 8, data: 'foo' },
-        { number: 9, data: 'foo' },
-        { number: 10, data: 'foo' },
+        {
+          number: 1,
+          data: {
+            count: { smart: 10, general: 90 },
+            avg_height: 20,
+            avg_weight: 50,
+            avg_history: {
+              avg_height: [30, 29, 28, 27, 24, 25, 24],
+              avg_weight: [47, 48, 49, 50, 49, 48, 50],
+            },
+            buoy: [
+              {
+                index: 1,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 2,
+                cur_height: 21,
+                cur_weight: 37,
+                history: {
+                  height: [21, 19, 21, 19, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 36, 37],
+                },
+              },
+              {
+                index: 3,
+                cur_height: 19,
+                cur_weight: 36,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 4,
+                cur_height: 21,
+                cur_weight: 37,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 5,
+                cur_height: 19,
+                cur_weight: 34,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 6,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 7,
+                cur_height: 23,
+                cur_weight: 34,
+                history: {
+                  height: [19, 20, 21, 24, 19, 20, 24],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 8,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 9,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 10,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+            ],
+          },
+        },
+        {
+          number: 2,
+          data: {
+            count: { smart: 10, general: 100 },
+            avg_height: 22,
+            avg_weight: 54,
+            avg_history: {
+              avg_height: [30, 29, 27, 27, 24, 21, 22],
+              avg_weight: [47, 48, 49, 50, 48, 52, 55],
+            },
+            buoy: [
+              {
+                index: 1,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 2,
+                cur_height: 21,
+                cur_weight: 37,
+                history: {
+                  height: [21, 19, 21, 19, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 36, 37],
+                },
+              },
+              {
+                index: 3,
+                cur_height: 19,
+                cur_weight: 36,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 4,
+                cur_height: 21,
+                cur_weight: 37,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 5,
+                cur_height: 19,
+                cur_weight: 34,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 6,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 7,
+                cur_height: 23,
+                cur_weight: 34,
+                history: {
+                  height: [19, 20, 21, 24, 19, 20, 24],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 8,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 9,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 10,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+            ],
+          },
+        },
+        {
+          number: 1,
+          data: {
+            count: { smart: 10, general: 90 },
+            avg_height: 20,
+            avg_weight: 50,
+            avg_history: {
+              avg_height: [30, 29, 28, 27, 24, 25, 24],
+              avg_weight: [47, 48, 49, 50, 49, 48, 50],
+            },
+            buoy: [
+              {
+                index: 1,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 2,
+                cur_height: 21,
+                cur_weight: 37,
+                history: {
+                  height: [21, 19, 21, 19, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 36, 37],
+                },
+              },
+              {
+                index: 3,
+                cur_height: 19,
+                cur_weight: 36,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 4,
+                cur_height: 21,
+                cur_weight: 37,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 5,
+                cur_height: 19,
+                cur_weight: 34,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 6,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 7,
+                cur_height: 23,
+                cur_weight: 34,
+                history: {
+                  height: [19, 20, 21, 24, 19, 20, 24],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 8,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 9,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 10,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+            ],
+          },
+        },
+        {
+          number: 2,
+          data: {
+            count: { smart: 10, general: 100 },
+            avg_height: 22,
+            avg_weight: 54,
+            avg_history: {
+              avg_height: [30, 29, 27, 27, 24, 21, 22],
+              avg_weight: [47, 48, 49, 50, 48, 52, 55],
+            },
+            buoy: [
+              {
+                index: 1,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 2,
+                cur_height: 21,
+                cur_weight: 37,
+                history: {
+                  height: [21, 19, 21, 19, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 36, 37],
+                },
+              },
+              {
+                index: 3,
+                cur_height: 19,
+                cur_weight: 36,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 4,
+                cur_height: 21,
+                cur_weight: 37,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 5,
+                cur_height: 19,
+                cur_weight: 34,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 6,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 7,
+                cur_height: 23,
+                cur_weight: 34,
+                history: {
+                  height: [19, 20, 21, 24, 19, 20, 24],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 8,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 9,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+              {
+                index: 10,
+                cur_height: 20,
+                cur_weight: 38,
+                history: {
+                  height: [19, 20, 21, 20, 19, 20, 21],
+                  weight: [38, 37, 39, 38, 37, 38, 39],
+                },
+              },
+            ],
+          },
+        },
       ],
     });
 

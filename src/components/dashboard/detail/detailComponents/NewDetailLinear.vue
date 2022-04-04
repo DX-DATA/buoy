@@ -1,31 +1,23 @@
 <template>
-  <div class="text">라인 {{ props.line.number }}</div>
-  <div>
-    <div class="linear" ref="linear">
-      <div class="line" v-on:click="onClick">
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle pink"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle pink"></div>
-        <div class="circle"></div>
-        <div class="circle pink"></div>
+  <div class="linear" ref="linear">
+    <div class="line">
+      <div v-for="(line, index) in props.line" :key="line">
+        <div v-if="state.clickedLine[index]" class="text" :class="{ left_side_border: index == 0 }">{{ line.number }}번 라인</div>
+        <div v-else :class="{ blue_box: index % 2 == 0, sky_box: index % 2 == 1 }" v-on:click="onClick(index)"></div>
       </div>
-      <img :src="require('@/assets/bottom_arrow.svg')" style="cursor: pointer" v-if="!state.isClicked" v-on:click="onClick" />
-      <img :src="require('@/assets/top_arrow.svg')" style="cursor: pointer" v-if="state.isClicked" v-on:click="onClick" />
 
-      <Detailinfo v-if="state.isClicked" @onclickBouyMenu="onclickBouyMenu" />
-
-      <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
+      <div class="plus-box" v-on:click="onclickPlusMenu"><img :src="require('@/assets/plus.svg')" class="plus" /></div>
     </div>
 
-    <BouyModal v-if="state.isBouyModal" :data="state.modalData" />
+    <Detailinfo @onclickBouyMenu="onclickBouyMenu" :line="state.line" :key="state.line" />
 
     <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
   </div>
+
+  <BouyModal v-if="state.isBouyModal" :data="state.modalData" />
+  <PlusModal v-if="state.isPlusModal" />
+
+  <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
 </template>
 
 <script>
@@ -33,10 +25,12 @@ import { reactive, ref } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
 import Detailinfo from './LinearComponents/Detail_info.vue';
 import BouyModal from './LinearComponents/BouyModal.vue';
+import PlusModal from './LinearComponents/PlusModal.vue';
+
 import { useRoute } from 'vue-router';
 
 export default {
-  components: { Detailinfo, BouyModal },
+  components: { Detailinfo, BouyModal, PlusModal },
   props: { line: Object },
   setup(props) {
     let linear = ref(null);
@@ -44,12 +38,17 @@ export default {
     const route = useRoute();
 
     let state = reactive({
-      isClicked: false,
+      clickedLine: [],
+      trueLine: 0,
       isBouyModal: false,
+      isPlusModal: false,
       modalData: {},
+      line: {},
     });
 
     onMounted(() => {
+      init();
+
       if (route.params.data) {
         let data = JSON.parse(route.params.data);
 
@@ -65,15 +64,22 @@ export default {
       }
     });
 
-    function onClick() {
-      state.isClicked = !state.isClicked;
+    function init() {
+      props.line.forEach((v, idx) => {
+        state.line = v;
+        if (idx === 0) {
+          state.clickedLine.push(true);
+        } else {
+          state.clickedLine.push(false);
+        }
+      });
+    }
 
-      if (state.isClicked) {
-        linear.value.appendC;
-        linear.value.style.height = 'auto';
-      } else {
-        linear.value.style.height = '60px';
-      }
+    function onClick(index) {
+      state.clickedLine[state.trueLine] = false;
+      state.line = props.line[index];
+      state.trueLine = index;
+      state.clickedLine[state.trueLine] = true;
     }
 
     function onclickBouyMenu(data) {
@@ -82,8 +88,15 @@ export default {
       modal_wrapper.value.style.display = 'block';
     }
 
+    function onclickPlusMenu() {
+      state.isPlusModal = true;
+      modal_wrapper.value.style.display = 'block';
+    }
+
     function closeModal() {
       state.isBouyModal = false;
+      state.isPlusModal = false;
+
       modal_wrapper.value.style.display = 'none';
     }
 
@@ -94,6 +107,7 @@ export default {
       closeModal,
       onclickBouyMenu,
       modal_wrapper,
+      onclickPlusMenu,
       props,
     };
   },
@@ -103,32 +117,49 @@ export default {
 <style scoped>
 .linear {
   width: 100%;
-  height: 60px;
-  background: #ffffff;
-  border-radius: 20px;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  height: auto;
+
   display: grid;
   align-items: center;
   align-content: stretch;
   grid-template-columns: 2fr 0.1fr;
   grid-template-rows: 60px 1fr;
+  grid-column: 1 / 3;
+  gap: 0px;
 }
 
 .line {
   width: 90%;
-  height: 2px;
-  border: 1px solid #a1c2c9;
-  background: #a1c2c9;
+  /* height: 2px; */
+  /* border: 1px solid #a1c2c9; */
+  /* background: #a1c2c9; */
   border-radius: 2px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   cursor: pointer;
-  margin: 0 auto;
+  margin: 0px;
 }
 
 .text {
   font-weight: bold;
-  font-size: 32px;
+  font-size: 28px;
+  background: #ffffff;
+  border: 1px solid #c4c9d3;
+  border-bottom: none;
+  border-radius: 0px 0px 0px 0px;
+  width: 180px;
+  height: 58px;
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.left_side_border {
+  border-radius: 20px 0px 0px 0px;
 }
 
 .circle {
@@ -147,6 +178,31 @@ export default {
   width: 100%;
   height: 100vh;
   background: rgb(0, 0, 0, 0.5);
+}
+
+.blue_box {
+  background: #748bde;
+  width: 59px;
+  height: 59px;
+}
+
+.sky_box {
+  background: #85abf4;
+  width: 59px;
+  height: 59px;
+}
+
+.plus-box {
+  width: 59px;
+  height: 59px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edeff5;
+}
+
+.plus {
+  width: 24px;
 }
 
 .pink {
