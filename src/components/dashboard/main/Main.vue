@@ -28,6 +28,9 @@ import Warning from './mainComponent/Warning.vue';
 import SeaInfo from './mainComponent/SeaInfo.vue';
 import GroupMain from './mainComponent/mainGroup/GroupMain.vue';
 import GeneralInfo from './mainComponent/GeneralInfo.vue';
+import axios from 'axios';
+import { onMounted } from '@vue/runtime-core';
+import { dfs_xy_conv } from '@/functions';
 
 export default {
   components: {
@@ -74,18 +77,53 @@ export default {
         },
       ],
       generalInfo: {
-        wave_velocity: 3.5,
-        wind: 2.5,
+        wave_velocity: '',
+        wind: '',
         cast: 'rainy', //날씨
-        temperature: 12.7,
+        temperature: '',
       },
       seaInfo: {
-        temp: 7.5,
+        temp: '',
         avg_temp: 5.5,
-        salinity: 3.2,
+        salinity: '',
         avg_salinity: 3.5,
+        waveHeight: '',
       },
     });
+
+    onMounted(() => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        let query = `latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`;
+
+        axios
+          .get('http://localhost:3124/main/data?' + query)
+          .then((response) => {
+            let data = response.data;
+
+            state.generalInfo.wave_velocity = data.tidal.current_speed;
+            state.generalInfo.wind = data.obs_data.wind_speed;
+            state.generalInfo.temperature = data.obs_data.air_temp;
+
+            state.seaInfo.temp = data.obs_data.water_temp;
+            // state.seaInfo.avg_temp = data.
+            state.seaInfo.salinity = data.obs_data.Salinity;
+            // state.seaInfo.avg_salinity = data.
+            state.seaInfo.waveHeight = data.wave_hight.wave_height;
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      });
+    });
+
+    function getLocation() {
+      // LCC DFS 좌표변환 ( code : "toXY"(위경도->좌표, v1:위도, v2:경도), "toLL"(좌표->위경도,v1:x, v2:y) )
+
+      let rs = dfs_xy_conv('toXY', 34.7973052, 128.4642589);
+      console.log('위치', rs);
+    }
+
+    getLocation();
 
     return { state };
   },

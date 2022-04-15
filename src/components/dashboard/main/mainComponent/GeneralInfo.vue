@@ -18,15 +18,10 @@
       </div>
     </div>
     <div class="wind item">
-      <img
-        style="height: 64px; margin: 0 auto"
-        :src="require('../../../../assets/wind.svg')"
-      />
+      <img style="height: 64px; margin: 0 auto" :src="require('../../../../assets/wind.svg')" />
       <div class="text">
         <div class="text-top">풍속</div>
-        <div class="text-bottom">
-          {{ props.data.wind }} <span style="font-size: 24px">cm/s</span>
-        </div>
+        <div class="text-bottom">{{ props.data.wind }} <span style="font-size: 24px">m/s</span></div>
       </div>
     </div>
     <div class="wave item">
