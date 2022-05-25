@@ -1,6 +1,6 @@
 <template>
-  <DetailList v-if="!state.isDetail" @setBouy="setBouy" />
-  <BouyDetailComponent v-if="state.isDetail" :name="state.name" />
+  <detail-list v-if="!state.isDetail" @setGroup="setGroup" />
+  <bouy-detail-component v-if="state.isDetail" :name="state.name" :group_id="state.group_id" @backButton="backButton" />
 </template>
 
 <script>
@@ -19,14 +19,15 @@ export default {
     let route = useRoute();
 
     let state = reactive({
+      group_id: 0,
       name: '',
       isDetail: false,
     });
 
     onMounted(() => {
       state.name = route.params.name;
-
-      if (route.params.name == undefined) {
+      state.group_id = parseInt(route.params.group_id);
+      if (route.params.group_id == undefined) {
         state.isDetail = false;
         store.commit('setHeader', '상세 정보');
       } else {
@@ -35,13 +36,19 @@ export default {
       }
     });
 
-    function setBouy(Bouy) {
+    function setGroup(name, group_id) {
       state.isDetail = true;
-      state.name = Bouy;
-      store.commit('setHeader', Bouy + '구역 상세 정보');
+      state.name = name;
+      state.group_id = group_id;
+      store.commit('setHeader', name + '구역 상세 정보');
     }
 
-    return { state, setBouy };
+    function backButton() {
+      state.isDetail = false;
+      store.commit('setHeader', '상세 정보');
+    }
+
+    return { state, setGroup, backButton };
   },
 };
 </script>

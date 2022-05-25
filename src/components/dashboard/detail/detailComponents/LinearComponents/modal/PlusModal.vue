@@ -18,8 +18,7 @@ export default {
   height: 50vh;
   background: white;
   position: fixed;
-  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
-    both;
+  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   top: 20vh;
   left: 60vh;
@@ -73,8 +72,7 @@ export default {
 }
 
 .scale-up-center {
-  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
-    both;
+  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 /* ----------------------------------------------

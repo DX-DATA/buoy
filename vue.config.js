@@ -9,6 +9,6 @@ module.exports = {
         pathRewrite: { '^/seainfo': '' },
       },
     },
-    headers: { 'Access-Control-Allow-Origin': '*' },
+    // headers: { 'Access-Control-Allow-Origin': '*' },
   },
 };

@@ -91,8 +91,9 @@ export default {
 .seaInfo-container {
   width: 100%;
   grid-template-columns: 0.9fr 1fr;
+  grid-template-rows: 1fr 1fr;
   padding: 32px 0px 32px 0px;
-  height: 220px;
+  height: 280px;
   display: grid;
   background: #f8f8f8;
   border: 1px solid #cbcbcb;

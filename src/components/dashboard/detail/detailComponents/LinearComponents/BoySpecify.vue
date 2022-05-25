@@ -1,15 +1,7 @@
 <template>
   <div class="specify-container">
-    <img
-      v-on:click="onclickMenu"
-      class="bouy_img"
-      :src="
-        props.data.warn
-          ? require('@/assets/buoy_img_warn.svg')
-          : require('@/assets/buoy_img.svg')
-      "
-    />
-    <span class="number">{{ props.data.number }}</span>
+    <img class="bouy_img" :src="props.data.warn ? require('@/assets/buoy_img_warn.svg') : require('@/assets/buoy_img.svg')" />
+    <span class="number">{{ props.data.model.slice(5) }}</span>
   </div>
 </template>
 

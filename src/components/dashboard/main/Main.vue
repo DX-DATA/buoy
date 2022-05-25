@@ -17,7 +17,7 @@
     </div>
 
     <div class="graph-area">
-      <GroupMain />
+      <GroupMain :data="state.groupData" :key="state.groupData" />
     </div>
   </div>
 </template>
@@ -28,9 +28,8 @@ import Warning from './mainComponent/Warning.vue';
 import SeaInfo from './mainComponent/SeaInfo.vue';
 import GroupMain from './mainComponent/mainGroup/GroupMain.vue';
 import GeneralInfo from './mainComponent/GeneralInfo.vue';
-import axios from 'axios';
+import api from '@/api/api';
 import { onMounted } from '@vue/runtime-core';
-import { dfs_xy_conv } from '@/functions';
 
 export default {
   components: {
@@ -41,89 +40,106 @@ export default {
   },
   setup() {
     let state = reactive({
-      warning: [
-        {
-          area: 'A',
-          line: 2,
-          warn: {
-            type: 'height',
-            status: 'row',
-          },
-        },
-        {
-          area: 'B',
-          line: 3,
-          warn: {
-            type: 'weight',
-            status: 'full',
-          },
-        },
-        {
-          area: 'C',
-          line: 3,
-          warn: {
-            type: 'location',
-            target: 1,
-            status: 'mssing',
-          },
-        },
-        {
-          area: 'D',
-          line: 7,
-          warn: {
-            type: 'height',
-            status: 'row',
-          },
-        },
-      ],
+      warning: [],
       generalInfo: {
         wave_velocity: '',
         wind: '',
-        cast: 'rainy', //날씨
+        cast: '', //날씨
+        cast_msg: '',
         temperature: '',
       },
       seaInfo: {
         temp: '',
-        avg_temp: 5.5,
+        avg_temp: 17.2,
         salinity: '',
-        avg_salinity: 3.5,
+        avg_salinity: 30.2,
         waveHeight: '',
       },
+      groupData: [],
     });
 
     onMounted(() => {
-      navigator.geolocation.getCurrentPosition((position) => {
-        let query = `latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`;
-
-        axios
-          .get('http://localhost:3124/main/data?' + query)
-          .then((response) => {
-            let data = response.data;
-
-            state.generalInfo.wave_velocity = data.tidal.current_speed;
-            state.generalInfo.wind = data.obs_data.wind_speed;
-            state.generalInfo.temperature = data.obs_data.air_temp;
-
-            state.seaInfo.temp = data.obs_data.water_temp;
-            // state.seaInfo.avg_temp = data.
-            state.seaInfo.salinity = data.obs_data.Salinity;
-            // state.seaInfo.avg_salinity = data.
-            state.seaInfo.waveHeight = data.wave_hight.wave_height;
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      });
+      getMainData();
+      getGroupData();
+      getWarnData();
     });
 
-    function getLocation() {
-      // LCC DFS 좌표변환 ( code : "toXY"(위경도->좌표, v1:위도, v2:경도), "toLL"(좌표->위경도,v1:x, v2:y) )
+    function getMainData() {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        let query = `?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`;
 
-      let rs = dfs_xy_conv('toXY', 34.7973052, 128.4642589);
-      console.log('위치', rs);
+        let data = await api._GET('main/data', query);
+        state.generalInfo.wave_velocity = data.tidal.current_speed;
+        state.generalInfo.wind = data.meteo_val.data.wind_velocity;
+        state.generalInfo.temperature = data.meteo_val.data.temperature;
+
+        set_sky_data(data.meteo_val.data);
+
+        state.seaInfo.temp = data.obs_data.water_temp;
+        // state.seaInfo.avg_temp = data.
+        state.seaInfo.salinity = data.obs_data.Salinity;
+        // state.seaInfo.avg_salinity = data.
+        state.seaInfo.waveHeight = data.wave_hight.wave_height;
+      });
     }
 
-    getLocation();
+    function set_sky_data(data) {
+      if (data.rain_code === '0') {
+        switch (data.sky) {
+          case '1':
+            state.generalInfo.cast = 'sunny';
+            state.generalInfo.cast_msg = '맑음';
+            break;
+          case '3':
+            state.generalInfo.cast = 'cloudy';
+            state.generalInfo.cast_msg = '구름많음';
+            break;
+          case '4':
+            state.generalInfo.cast = 'cloudy2';
+            state.generalInfo.cast_msg = '흐림';
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (data.rain_code) {
+          case '1':
+            state.generalInfo.cast = 'rainy';
+            state.generalInfo.cast_msg = '비';
+            break;
+          case '2':
+            state.generalInfo.cast = 'rain_snow';
+            state.generalInfo.cast_msg = '눈/비';
+            break;
+          case '3':
+            state.generalInfo.cast = 'snow';
+            state.generalInfo.cast_msg = '눈';
+            break;
+          case '5':
+            state.generalInfo.cast = 'raindrop';
+            state.generalInfo.cast_msg = '빗방울';
+            break;
+          case '6':
+            state.generalInfo.cast = 'raindrop_blizzard';
+            state.generalInfo.cast_msg = '빗방울/눈날림';
+            break;
+          case '7':
+            state.generalInfo.cast = 'blizzard';
+            state.generalInfo.cast_msg = '눈날림';
+            break;
+        }
+      }
+    }
+
+    async function getGroupData() {
+      let data = await api._GET('main/group');
+      state.groupData = data;
+    }
+
+    async function getWarnData() {
+      let data = await api._GET('main/warn');
+      state.warning = data;
+    }
 
     return { state };
   },

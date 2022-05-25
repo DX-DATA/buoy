@@ -29,17 +29,11 @@ export default {
   padding: 0px;
   display: grid;
   background: #e6e7eb;
-  grid-template-columns: 0.2fr 1fr;
+  grid-template-columns: 0.15fr 1fr;
   grid-template-rows: 101px 1fr;
   grid-template-areas:
     'nav header'
     'nav content';
-}
-
-.header_line {
-}
-
-.padding {
 }
 
 .nav {

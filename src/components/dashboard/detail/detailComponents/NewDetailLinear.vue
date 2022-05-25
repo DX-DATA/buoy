@@ -1,15 +1,15 @@
 <template>
   <div class="linear" ref="linear">
     <div class="line">
-      <div v-for="(line, index) in props.line" :key="line">
-        <div v-if="state.clickedLine[index]" class="text" :class="{ left_side_border: index == 0 }">{{ line.number }}번 라인</div>
+      <div v-for="(line, index) in state.lineArr" :key="line">
+        <div v-if="state.clickedLine[index]" class="text" :class="{ left_side_border: index == 0 }">{{ line._line_info.line }}번 라인</div>
         <div v-else :class="{ blue_box: index % 2 == 0, sky_box: index % 2 == 1 }" v-on:click="onClick(index)"></div>
       </div>
 
       <div class="plus-box" v-on:click="onclickPlusMenu"><img :src="require('@/assets/plus.svg')" class="plus" /></div>
     </div>
 
-    <Detailinfo @onclickBouyMenu="onclickBouyMenu" :line="state.line" :key="state.line" />
+    <Detailinfo @onclickBouyMenu="onclickBouyMenu" :line="state.line" :key="state.line" v-if="state.isLoading" />
 
     <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
   </div>
@@ -24,14 +24,16 @@
 import { reactive, ref } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
 import Detailinfo from './LinearComponents/Detail_info.vue';
-import BouyModal from './LinearComponents/BouyModal.vue';
-import PlusModal from './LinearComponents/PlusModal.vue';
+import BouyModal from './LinearComponents/modal/BouyModal.vue';
+import PlusModal from './LinearComponents/modal/PlusModal.vue';
 
 import { useRoute } from 'vue-router';
 
 export default {
   components: { Detailinfo, BouyModal, PlusModal },
-  props: { line: Object },
+  props: {
+    line: Array,
+  },
   setup(props) {
     let linear = ref(null);
     const modal_wrapper = ref(null);
@@ -43,7 +45,9 @@ export default {
       isBouyModal: false,
       isPlusModal: false,
       modalData: {},
+      lineArr: [],
       line: {},
+      isLoading: false,
     });
 
     onMounted(() => {
@@ -51,31 +55,27 @@ export default {
 
       if (route.params.data) {
         let data = JSON.parse(route.params.data);
-
-        if (data.line == props.line.number) {
-          console.log(window.pageYOffset + linear.value.getBoundingClientRect().top + 300);
-
-          onClick();
-
-          setTimeout(() => {
-            window.scrollTo({ top: window.pageYOffset + linear.value.getBoundingClientRect().top, behavior: 'smooth' });
-          }, 20);
-        }
+        onClick(data.line - 1);
       }
     });
 
     function init() {
+      state.lineArr = props.line;
+
       props.line.forEach((v, idx) => {
-        state.line = v;
         if (idx === 0) {
+          state.line = v;
           state.clickedLine.push(true);
         } else {
           state.clickedLine.push(false);
         }
       });
+
+      state.isLoading = true;
     }
 
     function onClick(index) {
+      console.log(index);
       state.clickedLine[state.trueLine] = false;
       state.line = props.line[index];
       state.trueLine = index;

@@ -1,25 +1,17 @@
 <template>
   <div class="modal">
-    <div class="buoy-modal-header">{{ props.data.number }}번 부표</div>
+    <div class="buoy-modal-header">{{ props.data.model.slice(5) }}번 부표</div>
     <hr />
 
     <div class="text-info">
       <div>
-        <span class="info-top">현재높이</span
-        ><span class="info-bottom">{{ props.data.height }} cm</span>
+        <span class="info-top">현재높이</span><span class="info-bottom">{{ props.data.height.toFixed(2) }} cm</span>
       </div>
       <div>
-        <span class="info-top">현재무게</span
-        ><span class="info-bottom"> {{ props.data.weight }} kg </span>
+        <span class="info-top">현재무게</span><span class="info-bottom"> {{ props.data.weight.toFixed(2) }} kg </span>
       </div>
-      <div>
-        <span class="info-top">그외 정보</span
-        ><span class="info-bottom"> 12 m/s </span>
-      </div>
-      <div>
-        <span class="info-top">그외 정보</span
-        ><span class="info-bottom"> 10 psu </span>
-      </div>
+      <div><span class="info-top">그외 정보</span><span class="info-bottom"> 12 m/s </span></div>
+      <div><span class="info-top">그외 정보</span><span class="info-bottom"> 10 psu </span></div>
     </div>
 
     <hr />
@@ -118,8 +110,7 @@ export default {
   height: 70vh;
   background: white;
   position: fixed;
-  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
-    both;
+  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   top: 15vh;
   left: 22.5vw;
@@ -220,8 +211,7 @@ export default {
 }
 
 .scale-up-center {
-  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
-    both;
+  -webkit-animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-center 0.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 /* ----------------------------------------------

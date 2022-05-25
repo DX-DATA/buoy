@@ -32,7 +32,7 @@
 import { reactive, ref } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
 import Detailinfo from './LinearComponents/Detail_info.vue';
-import BouyModal from './LinearComponents/BouyModal.vue';
+import BouyModal from './LinearComponents/modal/BouyModal.vue';
 import { useRoute } from 'vue-router';
 
 export default {

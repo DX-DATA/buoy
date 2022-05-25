@@ -1,7 +1,8 @@
 <template>
   <div class="main-group-container">
     <div class="top_menu">
-      <img class="menu-svg" src="../../../../../assets/list.svg" v-on:click="onclickMenu" />
+      <!-- <img class="menu-svg" src="../../../../../assets/list.svg" v-on:click="onclickMenu" /> -->
+      <div class="menu"></div>
     </div>
 
     <hr class="head_line" />
@@ -9,7 +10,7 @@
     <div class="content">
       <div class="info-area" v-for="data in state.content" :key="data">
         <div class="title">
-          <button class="area-button" v-on:click="detail(data.name.slice(0, 1))">
+          <button class="area-button" v-on:click="detail(data.name.slice(0, -2), data.group_id)">
             {{ data.name }}
           </button>
         </div>
@@ -38,11 +39,14 @@ import InfoCard from './InfoCard.vue';
 import MainLocation from './MainLocation.vue';
 import ListModal from '../ListModal.vue';
 import { useRouter } from 'vue-router';
+import { onMounted } from '@vue/runtime-core';
 
 export default {
   components: { InfoCard, MainLocation, ListModal },
-
-  setup() {
+  props: {
+    data: Object,
+  },
+  setup(props) {
     const router = useRouter();
 
     const modal = ref(null);
@@ -50,68 +54,7 @@ export default {
 
     let state = reactive({
       isModal: false,
-      content: [
-        {
-          name: 'A구역',
-          data: [
-            {
-              icon: 'buoy',
-              description: '해수면으로부터 평균 높이',
-              data: '40cm',
-            },
-            {
-              icon: 'weight',
-              description: '구역 부표 평균 무게',
-              data: '30kg',
-            },
-            {
-              icon: 'etc',
-              description: '그외 다른 정보',
-              data: '40cm',
-            },
-            {
-              icon: 'capacity',
-              description: '평균 수용량',
-              data: '60%',
-            },
-          ],
-          location: {
-            center: { lat: 34.7972552, lon: 128.4642089 },
-            sw: { lat: 34.7972552, lon: 128.4642089 },
-            ne: { lat: 34.7973552, lon: 128.4643089 },
-          },
-        },
-        {
-          name: 'B구역',
-          data: [
-            {
-              icon: 'buoy',
-              description: '해수면으로부터 평균 높이',
-              data: '20cm',
-            },
-            {
-              icon: 'weight',
-              description: '구역 부표 평균 무게',
-              data: '60kg',
-            },
-            {
-              icon: 'etc',
-              description: '그외 다른 정보',
-              data: '20cm',
-            },
-            {
-              icon: 'capacity',
-              description: '평균 수용량',
-              data: '90%',
-            },
-          ],
-          location: {
-            center: { lat: 34.7972552, lon: 128.4642089 },
-            sw: { lat: 34.7974552, lon: 128.4643089 },
-            ne: { lat: 34.7975552, lon: 128.4644089 },
-          },
-        },
-      ],
+      content: [],
     });
 
     function onclickMenu() {
@@ -127,20 +70,71 @@ export default {
     function setlist(data) {
       state.isModal = false;
       modal_wrapper.value.style.display = 'none';
-      console.log(data);
       state.content.forEach((v, i) => {
         state.content[i].name = data[i].toUpperCase() + '구역';
       });
     }
 
-    function detail(name) {
+    function detail(name, group_id) {
       router.push({
         name: 'Detail',
         params: {
           name: name,
+          group_id: group_id,
         },
       });
     }
+
+    onMounted(() => {
+      let data = [];
+
+      props.data.forEach((v) => {
+        let temp = {
+          name: v.group_name + '구역',
+          group_id: v.group_id,
+          data: [
+            {
+              type: 'height',
+              icon: 'buoy',
+              description: '해수면으로부터 평균 높이',
+              data: v.group_height.toFixed(2) + 'cm',
+              value: v.group_height.toFixed(2),
+            },
+            {
+              type: 'weight',
+              icon: 'weight',
+              description: '구역 부표 평균 무게',
+              data: v.group_weight.toFixed(2) + 'kg',
+              value: v.group_weight.toFixed(2),
+            },
+            {
+              type: 'salinity',
+              icon: 'etc',
+              description: '평균 염분',
+              data: v.group_salinity.toFixed(2) + 'psu',
+              value: v.group_salinity.toFixed(2),
+            },
+            {
+              type: 'capacity',
+              icon: 'capacity',
+              description: '평균 수용량',
+              data: '60%',
+            },
+          ],
+          location: {
+            center: { lat: v.group_latitude, lon: v.group_longitude },
+            sw: { lat: v.group_latitude, lon: v.group_longitude },
+            ne: { lat: v.group_latitude, lon: v.group_longitude },
+          },
+        };
+
+        data.push(temp);
+      });
+
+      if (props.data.length != 0) {
+        state.content = data;
+      }
+    });
 
     return {
       state,
@@ -150,6 +144,7 @@ export default {
       detail,
       modal,
       modal_wrapper,
+      props,
     };
   },
 };
@@ -192,6 +187,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 20px;
+  row-gap: 40px;
 }
 
 .empty {
@@ -232,6 +228,10 @@ export default {
   width: 1px;
   background: #748bde;
   border: 4px solid #748bde;
+}
+
+.menu {
+  height: 50px;
 }
 
 /* anim */

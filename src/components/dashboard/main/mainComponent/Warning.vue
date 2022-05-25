@@ -23,11 +23,11 @@ export default {
     onMounted(() => {
       state.data = props.msg;
       let data = props.msg;
-      state.msg = `${data.area} 구역 ${data.line}번 라인의`;
+      state.msg = `${data.group_name} 구역 ${data.line}번 라인의`;
 
-      switch (data.warn.type) {
+      switch (data.warn_type) {
         case 'height': {
-          state.msg += ` 높이가 ${data.warn.status === 'row' ? '낮습니다' : '높습니다'}`;
+          state.msg += ` 높이가 ${data.message === 'low' ? '낮습니다' : '높습니다'}`;
           break;
         }
         case 'weight': {
@@ -35,9 +35,17 @@ export default {
 
           break;
         }
-        case 'location':
-          state.msg += ` ${data.warn.target}번 스마트 부표의 위치를 확인해 주세요`;
+        case 'temperature': {
+          state.msg += ` 온도가 ${data.message === 'low' ? '낮습니다' : '높습니다'}`;
           break;
+        }
+        case 'salinity': {
+          state.msg += ` 염도가 ${data.message === 'low' ? '낮습니다' : '높습니다'}`;
+          break;
+        }
+        // case 'location':
+        //   state.msg += ` ${data.warn.target}번 스마트 부표의 위치를 확인해 주세요`;
+        //   break;
       }
     });
 
@@ -45,7 +53,7 @@ export default {
       router.push({
         name: 'Detail',
         params: {
-          name: props.msg.area,
+          name: props.msg.group_name,
           data: JSON.stringify(state.data),
         },
       });

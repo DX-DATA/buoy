@@ -10,6 +10,7 @@
     </div>
 
     <div class="bottom">
+      <NavBottomButton :url="'logout'" />
       <hr class="bottom-line" />
       <NavBottomButton :url="'setting'" />
     </div>

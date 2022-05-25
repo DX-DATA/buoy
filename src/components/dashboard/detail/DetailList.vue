@@ -1,45 +1,55 @@
 <template>
-  <div class="detail-list">
-    <div
-      class="item"
-      v-for="name in state.name"
-      :key="name"
-      v-on:click="emitBouy(name)"
-    >
-      {{ name }} 구역
+  <div>
+    <div class="detail-list">
+      <div class="item" v-for="group in state.group" :key="group" v-on:click="emitGroup(group.group_name, group.group_id)">{{ group.group_name }} 구역</div>
+      <div class="add" v-on:click="openModal">구역 추가</div>
     </div>
-    <div class="add">구역 추가</div>
+
+    <add-modal v-if="state.click"></add-modal>
+    <div class="modal-wrapper fade-in" ref="modal_wrapper" v-on:click="closeModal"></div>
   </div>
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity';
+import { reactive, ref } from '@vue/reactivity';
+import { onMounted } from '@vue/runtime-core';
+import api from '@/api/api';
+import AddModal from './AddModal.vue';
+import { useStore } from 'vuex';
+
 export default {
+  components: { AddModal },
   setup(props, context) {
+    let store = useStore();
+
     let state = reactive({
-      name: [
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
-        'N',
-      ],
+      group: [],
+      click: false,
     });
 
-    function emitBouy(name) {
-      context.emit('setBouy', name);
+    const modal_wrapper = ref(null);
+
+    onMounted(async () => {
+      let data = await api._GET('detail/group/list');
+      state.group = data;
+      store.commit('setGroup', data);
+    });
+
+    function emitGroup(name, group_id) {
+      context.emit('setGroup', name, group_id);
     }
 
-    return { state, emitBouy };
+    function openModal() {
+      state.click = true;
+      modal_wrapper.value.style.display = 'block';
+    }
+
+    function closeModal() {
+      state.click = false;
+      modal_wrapper.value.style.display = 'none';
+    }
+
+    return { state, emitGroup, openModal, closeModal, modal_wrapper };
   },
 };
 </script>

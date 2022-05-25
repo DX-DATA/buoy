@@ -5,44 +5,44 @@
       <div></div>
     </div>
     <div class="bouy-grid">
-      <BoySpecify v-for="data in bouyData" :key="data" :data="data" v-on:click="onClickBouyImg(data)" />
+      <BoySpecify v-for="data in state.buoyData" :key="data" :data="data" v-on:click="onClickBouyImg(data)" />
     </div>
 
-    <div class="detail-item">
+    <div class="detail-item" v-if="state.loading">
       <div class="detail-text">부표 개수</div>
       <div class="table-grid">
         <span class="title-text">스마트 부표</span>
-        <span class="title-text">일반 부표</span>
-        <span class="content-text">10개</span>
-        <span class="content-text" v-if="!state.modify">90개</span>
-        <span class="content-text" v-if="state.modify"><input type="text" class="modify-text" :value="90" /></span>
+        <span class="title-text"></span>
+        <span class="content-text">{{ state.buoyData.length }}개</span>
+        <span class="content-text"></span>
       </div>
     </div>
 
-    <div class="detail-item">
+    <div class="detail-item" v-if="state.loading">
       <div class="detail-text">라인 정보</div>
       <div class="table-grid">
         <span class="title-text">현재 높이</span>
         <span class="title-text">현재 무게</span>
-        <span class="content-text">30cm</span>
-        <span class="content-text">50kg</span>
+        <span class="content-text">{{ state.lineData.height.toFixed(2) }}cm</span>
+        <span class="content-text">{{ state.lineData.weight.toFixed(2) }}kg</span>
       </div>
     </div>
 
-    <div class="modify-wrapper">
-      <div class="modify" v-on:click="onClickModify" v-if="!state.modify">개수 수정</div>
-      <div class="modify2" v-on:click="onClickModify" v-if="state.modify">완료</div>
+    <div class="detail-item" v-if="state.loading">
+      <div class="detail-text"></div>
+      <div class="table-grid">
+        <span class="title-text">현재 염분</span>
+        <span class="title-text">현재 수온</span>
+        <span class="content-text">{{ state.lineData.salinity.toFixed(2) }}psu</span>
+        <span class="content-text">{{ state.lineData.water_temp.toFixed(2) }}℃</span>
+      </div>
     </div>
 
     <hr />
-    <div class="detail-item">
-      <div class="detail-text">높이 이력</div>
-      <LineChart :chartData="lineData" :options="lineOption" />
-    </div>
 
-    <div class="detail-item">
-      <div class="detail-text">무게 이력</div>
-      <LineChart :chartData="lineData2" :options="lineOption2" />
+    <div class="detail-item" v-for="line in state.history" :key="line">
+      <div class="detail-text">{{ line.text }}</div>
+      <CustomChart :chartData="line" />
     </div>
 
     <div class="detail-item">
@@ -56,93 +56,93 @@
       </div>
       <div></div>
     </div>
+
+    <div class="modify-wrapper"></div>
   </div>
 </template>
 
 <script>
-import { LineChart } from 'vue-chart-3';
-import { Chart, registerables } from 'chart.js';
-import { ref, computed, reactive } from '@vue/reactivity';
+import { reactive } from '@vue/reactivity';
 import BoySpecify from './BoySpecify.vue';
 import LineLocation from './LineLocation.vue';
+import CustomChart from './CustomChart.vue';
 import { onMounted } from '@vue/runtime-core';
-Chart.register(...registerables);
 
 export default {
   components: {
-    LineChart,
     BoySpecify,
     LineLocation,
+    CustomChart,
   },
   props: { line: Object },
   emits: ['onclickBouyMenu'],
   setup(props, context) {
-    const lineData = computed(() => ({
-      labels: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7],
-      datasets: [
-        {
-          label: '라인 평균 높이',
-          data: [1, 2, 3, 4, 5, 3, 3, 1, 2],
-          pointBackgroundColor: 'white',
-          borderWidth: 2,
-          borderColor: '#77CEFF',
-          pointBorderColor: 'black',
-        },
-      ],
-    }));
-    const lineOption = ref({
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom',
-        },
-        title: {
-          display: true,
-          text: '일주간 높이 변화',
-          position: 'top',
-        },
-      },
+    let state = reactive({
+      alloc: false,
+      buoyData: [],
+      loading: false,
+      lineData: [],
+      label: [],
+      history: [],
     });
 
-    const lineData2 = computed(() => ({
-      labels: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7],
-      datasets: [
-        {
-          label: '라인 평균 무게',
-          data: [21, 22, 23, 24, 25, 26, 27, 28, 29],
-          pointBackgroundColor: 'white',
-          borderWidth: 2,
-          borderColor: '#black',
-          pointBorderColor: 'black',
-        },
-      ],
-    }));
-    const lineOption2 = ref({
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom',
-        },
-        title: {
-          display: true,
-          text: '일주간 무게 변화',
-          position: 'top',
-        },
-      },
+    onMounted(() => {
+      if (props.line != undefined) {
+        state.buoyData = props.line._buoy_list;
+        state.lineData = props.line._line_info;
+        setGraphData(props.line._history);
+        state.loading = true;
+      }
     });
 
-    const bouyData = [
-      { number: 1, height: '2', weight: '38', warn: false },
-      { number: 2, height: '2', weight: '36', warn: false },
-      { number: 3, height: '2.3', weight: '37', warn: true },
-      { number: 4, height: '2', weight: '38', warn: false },
-      { number: 5, height: '3', weight: '36', warn: false },
-      { number: 6, height: '2', weight: '34', warn: false },
-      { number: 7, height: '2.6', weight: '34', warn: true },
-      { number: 8, height: '3', weight: '36', warn: false },
-      { number: 9, height: '2', weight: '37', warn: true },
-      { number: 10, height: '2', weight: '34', warn: false },
-    ];
+    function setGraphData(arr) {
+      let temp = [
+        {
+          data: [],
+          label: [],
+          name: '라인 평균 높이',
+          title: '일주간 높이 변화',
+          text: '높이 이력',
+        },
+        {
+          data: [],
+          label: [],
+          name: '라인 평균 무게',
+          title: '일주간 무게 변화',
+          text: '무게 이력',
+        },
+        {
+          data: [],
+          label: [],
+          name: '라인 평균 염도',
+          title: '일주간 염도 변화',
+          text: '염도 이력',
+        },
+        {
+          data: [],
+          label: [],
+          name: '라인 평균 수온',
+          title: '일주간 수온 변화',
+          text: '수온 이력',
+        },
+      ];
+
+      let label = [];
+
+      arr.forEach((v) => {
+        temp[0].data.unshift(v.height);
+        temp[1].data.unshift(v.weight);
+        temp[2].data.unshift(v.water_temp);
+        temp[3].data.unshift(v.salinity);
+        label.unshift(v.date);
+      });
+
+      temp.forEach((v) => {
+        v.label = label;
+      });
+
+      state.history = temp;
+    }
 
     function deleteLine() {
       confirm('라인을 삭제하시겠습니까?');
@@ -152,28 +152,15 @@ export default {
       context.emit('onclickBouyMenu', data);
     }
 
-    let state = reactive({
-      modify: false,
-    });
-
-    function onClickModify() {
-      state.modify = !state.modify;
+    function onClickAlloc() {
+      state.alloc = !state.alloc;
     }
 
-    onMounted(() => {
-      console.log(props.line);
-    });
-
     return {
-      lineData,
-      lineOption,
-      bouyData,
-      lineData2,
-      lineOption2,
       deleteLine,
       onClickBouyImg,
       state,
-      onClickModify,
+      onClickAlloc,
     };
   },
 };
@@ -188,6 +175,7 @@ export default {
   background: #f9f9f9;
   border: 1px solid #c4c9d3;
   box-shadow: 4px 4px 7px rgba(189, 193, 215, 0.25);
+  row-gap: 5px;
 }
 
 .table-grid {
@@ -299,6 +287,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .modify-text {

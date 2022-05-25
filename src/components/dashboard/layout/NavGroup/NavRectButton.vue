@@ -1,6 +1,7 @@
 <template>
   <div class="nav-button">
-    <router-link class="nav_link" :to="props.url">{{ state.name }}</router-link>
+    <router-link class="nav_link" :to="props.url" v-if="props.url != 'logout'">{{ state.name }}</router-link>
+    <a v-on:click="logout" v-else class="plain-a">{{ state.name }}</a>
   </div>
 </template>
 
@@ -26,15 +27,21 @@ export default {
         case 'setting':
           state.name = '설정';
           break;
+        case 'logout':
+          state.name = '로그아웃';
+          break;
         default:
           state.name = '모름';
           break;
       }
     });
 
-    console.log(props.url);
+    async function logout() {
+      document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      location.href = '/';
+    }
 
-    return { props, state };
+    return { props, state, logout };
   },
 };
 </script>
@@ -56,6 +63,17 @@ export default {
   color: rgba(225, 225, 225, 0.8);
 }
 
+.plain-a {
+  align-items: center;
+  height: 20px;
+  padding: 1rem 1rem;
+  border-radius: 10px 10px 10px 10px;
+  text-decoration: none;
+  color: #4f678c;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  cursor: pointer;
+}
+
 .nav-button > a:hover {
   background-color: #ffffff !important;
   background: #ffffff;
@@ -71,8 +89,7 @@ export default {
   border-radius: 10px 10px 10px 10px;
   text-decoration: none;
   color: #4f678c;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
 .nav a.router-link-active {
@@ -80,7 +97,6 @@ export default {
   background: #ffffff;
   color: #4f678c;
   border-radius: 10px 10px 10px 10px;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 </style>

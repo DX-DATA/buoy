@@ -26,20 +26,17 @@ export default {
     function initMap() {
       var options = {
         center: new kakao.maps.LatLng(props.location.center.lat, props.location.center.lon),
-        level: 1,
+        level: 3,
       };
 
       let icon = new kakao.maps.MarkerImage('/pin.svg', new kakao.maps.Size(18, 18));
 
       let kakao_map = new kakao.maps.Map(ref(map).value, options);
 
-      console.log(props.location);
       let center = {
         lat: (props.location.sw.lat + props.location.ne.lat) / 2,
         lon: (props.location.sw.lon + props.location.ne.lon) / 2,
       };
-
-      console.log(center);
 
       let markerPosition = new kakao.maps.LatLng(center.lat, center.lon);
       let marker = new kakao.maps.Marker({
